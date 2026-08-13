@@ -291,19 +291,34 @@
     font-size: 14px;
     color: #5B4636;
   }
-  .rsvp-edit-btn {
-    display: block;
-    margin: 14px auto 0;
-    padding: 4px;
+  .rsvp-summary-actions {
+    margin-top: 14px;
+    text-align: center;
+  }
+  .rsvp-edit-btn,
+  .rsvp-delete-btn {
     border: none;
     background: none;
-    color: #8A7462;
+    padding: 4px;
     font-size: 13px;
     text-decoration: underline;
     cursor: pointer;
   }
+  .rsvp-edit-btn {
+    color: #8A7462;
+  }
   .rsvp-edit-btn:hover {
     color: #3E9CC9;
+  }
+  .rsvp-delete-btn {
+    color: #C97575;
+  }
+  .rsvp-delete-btn:hover {
+    color: #A85252;
+  }
+  .rsvp-summary-sep {
+    color: #C9BBA8;
+    font-size: 12px;
   }
   .closing-photo {
     margin-top: 22px;
@@ -363,7 +378,11 @@
           <div class="rsvp-summary" id="rsvpSummary" hidden>
             <div class="rsvp-summary-badge" id="rsvpSummaryBadge"></div>
             <div class="rsvp-summary-detail" id="rsvpSummaryDetail"></div>
-            <button type="button" class="rsvp-edit-btn" id="rsvpEditBtn">참석 여부 수정하기</button>
+            <div class="rsvp-summary-actions">
+              <button type="button" class="rsvp-edit-btn" id="rsvpEditBtn">수정하기</button>
+              <span class="rsvp-summary-sep">·</span>
+              <button type="button" class="rsvp-delete-btn" id="rsvpDeleteBtn">삭제하기</button>
+            </div>
           </div>
           <form id="rsvpForm">
             <div class="rsvp-toggle" role="group" aria-label="참석 여부">
@@ -481,6 +500,7 @@
   const rsvpSummaryBadge = document.getElementById('rsvpSummaryBadge');
   const rsvpSummaryDetail = document.getElementById('rsvpSummaryDetail');
   const rsvpEditBtn = document.getElementById('rsvpEditBtn');
+  const rsvpDeleteBtn = document.getElementById('rsvpDeleteBtn');
   const rsvpNameInput = document.getElementById('rsvpName');
   const rsvpAdultsInput = document.getElementById('rsvpAdults');
   const rsvpKidsInput = document.getElementById('rsvpKids');
@@ -507,6 +527,13 @@
       selectToggle(!!prefill.attending);
       rsvpAdultsInput.value = prefill.adults ?? 1;
       rsvpKidsInput.value = prefill.kids ?? 0;
+    } else {
+      rsvpNameInput.value = '';
+      rsvpAttending = null;
+      rsvpToggleBtns.forEach((b) => b.classList.remove('selected'));
+      rsvpGuests.hidden = true;
+      rsvpAdultsInput.value = 1;
+      rsvpKidsInput.value = 0;
     }
   }
 
@@ -523,6 +550,24 @@
 
   rsvpEditBtn.addEventListener('click', () => {
     showForm(getSavedRsvp());
+  });
+
+  rsvpDeleteBtn.addEventListener('click', () => {
+    const saved = getSavedRsvp();
+    if (!saved) return;
+    if (!confirm('참석 여부를 삭제할까요?')) return;
+
+    rsvpDeleteBtn.disabled = true;
+    fetch(RSVP_SCRIPT_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify({ id: saved.id, action: 'delete' })
+    }).finally(() => {
+      setCookie(RSVP_COOKIE, '', 0);
+      rsvpDeleteBtn.disabled = false;
+      showForm(null);
+    });
   });
 
   const savedRsvp = getSavedRsvp();

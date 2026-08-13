@@ -8,6 +8,15 @@ function doPost(e) {
   ensureIdColumn(sheet);
 
   var data = JSON.parse(e.postData.contents);
+
+  if (data.action === 'delete') {
+    var rowToDelete = findRowById(sheet, data.id);
+    if (rowToDelete > 0) sheet.deleteRow(rowToDelete);
+    return ContentService
+      .createTextOutput(JSON.stringify({ result: 'deleted' }))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
+
   var row = [
     data.id,
     new Date(),
