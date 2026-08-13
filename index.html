@@ -266,6 +266,45 @@
     max-width: 100%;
     margin: 0 auto 10px;
   }
+  .rsvp-summary-badge {
+    padding: 14px 8px;
+    border: 2px solid #EFE6D8;
+    border-radius: 14px;
+    font-family: 'NanumSquareRound', sans-serif;
+    font-weight: bold;
+    font-size: 15px;
+    text-align: center;
+  }
+  .rsvp-summary-badge.yes {
+    border-color: #8FCDEB;
+    background: #EAF5FB;
+    color: #3E9CC9;
+  }
+  .rsvp-summary-badge.no {
+    border-color: #F0B8B8;
+    background: #FDF1F1;
+    color: #C97575;
+  }
+  .rsvp-summary-detail {
+    margin-top: 10px;
+    text-align: center;
+    font-size: 14px;
+    color: #5B4636;
+  }
+  .rsvp-edit-btn {
+    display: block;
+    margin: 14px auto 0;
+    padding: 4px;
+    border: none;
+    background: none;
+    color: #8A7462;
+    font-size: 13px;
+    text-decoration: underline;
+    cursor: pointer;
+  }
+  .rsvp-edit-btn:hover {
+    color: #3E9CC9;
+  }
   .closing-photo {
     margin-top: 22px;
     width: 220px;
@@ -321,6 +360,11 @@
 
         <div class="rsvp-card">
           <div class="rsvp-title">참석 여부를 알려주세요</div>
+          <div class="rsvp-summary" id="rsvpSummary" hidden>
+            <div class="rsvp-summary-badge" id="rsvpSummaryBadge"></div>
+            <div class="rsvp-summary-detail" id="rsvpSummaryDetail"></div>
+            <button type="button" class="rsvp-edit-btn" id="rsvpEditBtn">참석 여부 수정하기</button>
+          </div>
           <form id="rsvpForm">
             <div class="rsvp-toggle" role="group" aria-label="참석 여부">
               <button type="button" class="rsvp-toggle-btn" data-val="yes">네, 갈게요 🎉</button>
@@ -402,21 +446,89 @@
   // --- RSVP form ---
   // Google Apps Script Web App URL (deploy the Apps Script, then paste the /exec URL here).
   const RSVP_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxkbkt3LkXB805JQVJlZqLB0lDyu3YYcfDXCLBlsPst0_hjz-EEcmjOtmujwNz7LeZZfA/exec';
+  const RSVP_COOKIE = 'teo_rsvp';
+  const RSVP_COOKIE_DAYS = 400;
+
+  function getCookie(name) {
+    const match = document.cookie.match(new RegExp('(?:^|; )' + name + '=([^;]*)'));
+    return match ? decodeURIComponent(match[1]) : null;
+  }
+  function setCookie(name, value, days) {
+    document.cookie = `${name}=${encodeURIComponent(value)}; max-age=${days * 24 * 60 * 60}; path=/; SameSite=Lax`;
+  }
+  function getSavedRsvp() {
+    try {
+      return JSON.parse(getCookie(RSVP_COOKIE) || 'null');
+    } catch (err) {
+      return null;
+    }
+  }
+  function newId() {
+    if (window.crypto && crypto.randomUUID) return crypto.randomUUID();
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
+      const r = (Math.random() * 16) | 0;
+      const v = c === 'x' ? r : (r & 0x3) | 0x8;
+      return v.toString(16);
+    });
+  }
 
   const rsvpToggleBtns = document.querySelectorAll('.rsvp-toggle-btn');
   const rsvpGuests = document.getElementById('rsvpGuests');
   const rsvpForm = document.getElementById('rsvpForm');
   const rsvpSubmit = document.getElementById('rsvpSubmit');
   const rsvpSuccess = document.getElementById('rsvpSuccess');
+  const rsvpSummary = document.getElementById('rsvpSummary');
+  const rsvpSummaryBadge = document.getElementById('rsvpSummaryBadge');
+  const rsvpSummaryDetail = document.getElementById('rsvpSummaryDetail');
+  const rsvpEditBtn = document.getElementById('rsvpEditBtn');
+  const rsvpNameInput = document.getElementById('rsvpName');
+  const rsvpAdultsInput = document.getElementById('rsvpAdults');
+  const rsvpKidsInput = document.getElementById('rsvpKids');
   let rsvpAttending = null;
 
+  function selectToggle(attending) {
+    rsvpAttending = attending;
+    rsvpToggleBtns.forEach((b) => b.classList.toggle('selected', (b.dataset.val === 'yes') === attending));
+    rsvpGuests.hidden = !attending;
+  }
+
   rsvpToggleBtns.forEach((btn) => {
-    btn.addEventListener('click', () => {
-      rsvpAttending = btn.dataset.val === 'yes';
-      rsvpToggleBtns.forEach((b) => b.classList.toggle('selected', b === btn));
-      rsvpGuests.hidden = !rsvpAttending;
-    });
+    btn.addEventListener('click', () => selectToggle(btn.dataset.val === 'yes'));
   });
+
+  function showForm(prefill) {
+    rsvpSummary.hidden = true;
+    rsvpSuccess.hidden = true;
+    rsvpForm.hidden = false;
+    rsvpSubmit.disabled = false;
+    rsvpSubmit.textContent = '전달하기';
+    if (prefill) {
+      rsvpNameInput.value = prefill.name || '';
+      selectToggle(!!prefill.attending);
+      rsvpAdultsInput.value = prefill.adults ?? 1;
+      rsvpKidsInput.value = prefill.kids ?? 0;
+    }
+  }
+
+  function showSummary(saved) {
+    rsvpForm.hidden = true;
+    rsvpSuccess.hidden = true;
+    rsvpSummary.hidden = false;
+    rsvpSummaryBadge.textContent = saved.attending ? '네, 갈게요 🎉' : '아쉽지만 다음에 뵐게요';
+    rsvpSummaryBadge.className = 'rsvp-summary-badge ' + (saved.attending ? 'yes' : 'no');
+    rsvpSummaryDetail.textContent = saved.attending
+      ? `${saved.name}님 · 어른 ${saved.adults}명 · 아이 ${saved.kids}명`
+      : `${saved.name}님`;
+  }
+
+  rsvpEditBtn.addEventListener('click', () => {
+    showForm(getSavedRsvp());
+  });
+
+  const savedRsvp = getSavedRsvp();
+  if (savedRsvp) {
+    showSummary(savedRsvp);
+  }
 
   rsvpForm.addEventListener('submit', (e) => {
     e.preventDefault();
@@ -424,16 +536,18 @@
       alert('참석 여부를 선택해 주세요.');
       return;
     }
-    const name = document.getElementById('rsvpName').value.trim();
+    const name = rsvpNameInput.value.trim();
     if (!name) {
       alert('이름을 입력해 주세요.');
       return;
     }
+    const existing = getSavedRsvp();
     const payload = {
+      id: (existing && existing.id) || newId(),
       name,
       attending: rsvpAttending,
-      adults: rsvpAttending ? Number(document.getElementById('rsvpAdults').value || 0) : 0,
-      kids: rsvpAttending ? Number(document.getElementById('rsvpKids').value || 0) : 0
+      adults: rsvpAttending ? Number(rsvpAdultsInput.value || 0) : 0,
+      kids: rsvpAttending ? Number(rsvpKidsInput.value || 0) : 0
     };
 
     rsvpSubmit.disabled = true;
@@ -445,6 +559,7 @@
       headers: { 'Content-Type': 'text/plain;charset=utf-8' },
       body: JSON.stringify(payload)
     }).then(() => {
+      setCookie(RSVP_COOKIE, JSON.stringify(payload), RSVP_COOKIE_DAYS);
       rsvpForm.hidden = true;
       rsvpSuccess.hidden = false;
     }).catch(() => {

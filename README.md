@@ -28,12 +28,12 @@ A single-page invitation for 태오's first birthday (돌잔치), published on a
 - **Map card** (white, radius `18px`): "오시는 길" label (Jua `18px` `#6FBCE0`), then:
   - In `reference.html`: a pill button "네이버 지도에서 보기" (`#8FCDEB` bg, white Jua text, radius `999px`) linking out to `https://naver.me/5EUX5aej` in a new tab.
   - In `index.html` (deployed): no button — a live interactive Naver Maps embed is shown directly, with a place-name header and a footer link to open the same `naver.me` URL in the app.
-- **RSVP card** (white, radius `18px`, `index.html` only — not in `reference.html`): "참석 여부를 알려주세요" title, a friendly two-button toggle ("네, 갈게요 🎉" / "아쉽지만 다음에 뵐게요") instead of bare yes/no, a required 이름 field, and — only when "네, 갈게요" is selected — 어른/아이 headcount number fields. Submitting posts to a Google Apps Script Web App that appends a row to a Google Sheet.
+- **RSVP card** (white, radius `18px`, `index.html` only — not in `reference.html`): "참석 여부를 알려주세요" title, a friendly two-button toggle ("네, 갈게요 🎉" / "아쉽지만 다음에 뵐게요") instead of bare yes/no, a required 이름 field, and — only when "네, 갈게요" is selected — 어른/아이 headcount number fields. Submitting posts to a Google Apps Script Web App that upserts a row in a Google Sheet, and saves the response in a `teo_rsvp` cookie (400-day expiry). On a later visit with that cookie present, the card shows a read-only summary of the saved response instead of a blank form, with a "참석 여부 수정하기" link that reopens the form pre-filled for editing; re-submitting updates the same sheet row (matched by a client-generated ID) instead of adding a duplicate.
 - **Closing sticker**: `photos/stk_hearthands.png`, width `220px`, rotated −2° (baby making heart hands).
 - **Sign-off**: "아빠 · 엄마 올림" `17px` `#8A7462`.
 
 ## RSVP backend (Google Sheet + Apps Script)
-RSVPs are stored in the Google Sheet **"태오 첫돌 RSVP"** (https://docs.google.com/spreadsheets/d/1_-Nrg0flVeHwn-5rOmMhwTQkzG5weHA22IhAY9Yl_G4/edit), with header row `타임스탬프 / 이름 / 참석여부 / 어른 / 아이`.
+RSVPs are stored in the Google Sheet **"태오 첫돌 RSVP"** (https://docs.google.com/spreadsheets/d/1_-Nrg0flVeHwn-5rOmMhwTQkzG5weHA22IhAY9Yl_G4/edit), with header row `ID / 타임스탬프 / 이름 / 참석여부 / 어른 / 아이`. `rsvp.gs`'s `ensureIdColumn()` auto-migrates an older header (without the `ID` column) on first run, so re-deploying an updated script doesn't require manually editing the sheet.
 
 Setup (one-time):
 1. Open the sheet above → Extensions → Apps Script.
@@ -41,7 +41,9 @@ Setup (one-time):
 3. Deploy → New deployment → type **Web app** → Execute as **Me** → Who has access **Anyone** → Deploy, authorize when prompted.
 4. Copy the resulting `/exec` URL and paste it into `RSVP_SCRIPT_URL` near the bottom of the `<script>` block in `index.html`.
 
-The form posts with `mode: 'no-cors'` (the standard workaround for Apps Script Web Apps not sending CORS headers), so the page can't read back a real success/failure response — it optimistically shows the "전달됐어요" message once the request goes out without a network error.
+When updating `rsvp.gs` after the first deploy (e.g. the ID-column upsert logic), editing the code alone does **not** update the live `/exec` URL — go to Deploy → Manage deployments → edit (pencil) → Version: **New version** → Deploy.
+
+The form posts with `mode: 'no-cors'` (the standard workaround for Apps Script Web Apps not sending CORS headers), so the page can't read back a real success/failure response — it optimistically shows the "전달됐어요" message once the request goes out without a network error. Each submission carries a client-generated `id` (persisted in the `teo_rsvp` cookie alongside the rest of the response); `doPost` looks for a row with that `id` and overwrites it in place if found, otherwise appends a new row — so editing an RSVP updates the original row rather than creating a duplicate.
 
 ## Fonts (all free-licensed)
 - **Jua** — Google Fonts (titles, labels, button)
