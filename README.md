@@ -23,7 +23,7 @@ A single-page invitation for 태오's first birthday (돌잔치), published on a
   "사랑으로 함께해 주신 모든 분들을 모시고 / 우리 태오의 첫 돌을 축하하려 합니다. / 귀한 걸음 하시어 자리를 빛내 주세요."
 - **Info card** (white, radius `18px`, padding `22px 24px`, rows gap `12px`): label (Jua `17px` `#6FBCE0`, `52px` wide) + value (`17px` bold, `white-space: nowrap` so date/place stay on one line):
   - 날짜 — 2026년 9월 5일 토요일 오전 11시 30분
-  - 장소 — 열두대문 의왕점
+  - 장소 — 열두대문한정식 의왕점
   - 주소 — 경기 의왕시 학현로 204 (`17px` `#8A7462`)
 - **Map card** (white, radius `18px`): "오시는 길" label (Jua `18px` `#6FBCE0`), then:
   - In `reference.html`: a pill button "네이버 지도에서 보기" (`#8FCDEB` bg, white Jua text, radius `999px`) linking out to `https://naver.me/5EUX5aej` in a new tab.
