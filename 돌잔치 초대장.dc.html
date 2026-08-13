@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta charset="utf-8">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Jua&family=Gaegu:wght@700&display=swap" rel="stylesheet">
+<title>돌잔치 초대장</title>
+<style>
+@font-face { font-family:'NanumSquareRound'; src:url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_two@1.0/NanumSquareRound.woff') format('woff'); font-weight:normal; }
+body { margin:0; background:#EAF5FB; font-family:'NanumSquareRound', sans-serif; }
+a { color:#3E9CC9; } a:hover { color:#2B7FA8; }
+</style>
+</helmet>
+<div style="min-height:100vh; display:flex; justify-content:center; padding:32px 16px; box-sizing:border-box;">
+  <div style="width:520px; background:#FCF3E7; border:6px solid #8FCDEB; border-radius:28px; padding:10px; box-sizing:border-box; height:fit-content;">
+    <div style="border:2px dashed #B5DEF2; border-radius:20px; padding:40px 36px 36px; display:flex; flex-direction:column; align-items:center; gap:0; color:#5B4636;">
+
+      <div style="font-family:'Gaegu'; font-weight:700; font-size:40px; line-height:1; letter-spacing:3px; transform:rotate(-2deg); text-shadow:1px 1px 0 rgba(111,188,224,0.35);">
+        <span style="color:#6FBCE0;">FIRST</span> <span style="color:#F49A9A;">BIRTHDAY</span>
+      </div>
+      <div style="margin-top:8px; font-family:'Gaegu'; font-weight:700; font-size:24px; color:#8A7462; transform:rotate(-1deg);">저희 아기가 첫 생일을 맞이했어요</div>
+
+      <sc-if value="{{ heroPhoto }}" hint-placeholder-val="{{ false }}">{{ heroImg }}</sc-if>
+
+      <h1 style="font-family:'Jua'; font-size:44px; margin:26px 0 0; color:#4E9FC7; text-align:center; line-height:1.35;">{{ babyName }}의<br>첫 번째 생일</h1>
+      <p style="margin:14px 0 0; font-size:18px; line-height:1.8; text-align:center; color:#7A6552;">사랑으로 함께해 주신 모든 분들을 모시고<br>우리 태오의 첫 돌을 축하하려 합니다.<br>귀한 걸음 하시어 자리를 빛내 주세요.</p>
+
+      <div style="margin-top:28px; width:100%; background:#FFFFFF; border-radius:18px; padding:22px 24px; box-sizing:border-box; display:flex; flex-direction:column; gap:12px;">
+        <div style="display:flex; gap:12px; align-items:baseline;">
+          <span style="font-family:'Jua'; font-size:17px; color:#6FBCE0; width:52px; flex:none;">날짜</span>
+          <span style="font-size:19px; font-weight:bold;">2026년 9월 5일 토요일 오후 1시</span>
+        </div>
+        <div style="display:flex; gap:12px; align-items:baseline;">
+          <span style="font-family:'Jua'; font-size:17px; color:#6FBCE0; width:52px; flex:none;">장소</span>
+          <span style="font-size:19px; font-weight:bold;">열두대문 의왕점</span>
+        </div>
+        <div style="display:flex; gap:12px; align-items:baseline;">
+          <span style="font-family:'Jua'; font-size:17px; color:#6FBCE0; width:52px; flex:none;">주소</span>
+          <span style="font-size:17px; color:#8A7462;">경기 의왕시 학현로 204</span>
+        </div>
+      </div>
+
+      <div style="margin-top:16px; width:100%; background:#FFFFFF; border-radius:18px; padding:18px 20px 16px; box-sizing:border-box;">
+        <div style="font-family:'Jua'; font-size:18px; color:#6FBCE0; margin-bottom:10px;">오시는 길</div>
+        <svg viewBox="0 0 400 190" style="width:100%; display:block; background:#F2FAFE; border-radius:12px;">
+          <ellipse cx="70" cy="150" rx="95" ry="55" fill="#C9E8F7"></ellipse>
+          <text x="58" y="156" font-size="13" fill="#5FA8CD" font-family="NanumSquareRound">백운호수</text>
+          <path d="M 0 60 L 400 40" stroke="#E4D8C8" stroke-width="14" fill="none"></path>
+          <text x="300" y="32" font-size="11" fill="#A28D77" font-family="NanumSquareRound">백운호수로</text>
+          <path d="M 150 190 L 210 50" stroke="#E4D8C8" stroke-width="12" fill="none"></path>
+          <text x="196" y="140" font-size="11" fill="#A28D77" font-family="NanumSquareRound" transform="rotate(-67 196 140)">학현로</text>
+          <circle cx="262" cy="96" r="7" fill="#F49A9A"></circle>
+          <path d="M 262 118 L 254 100 L 270 100 Z" fill="#F49A9A"></path>
+          <text x="278" y="101" font-size="13" font-weight="bold" fill="#5B4636" font-family="NanumSquareRound">열두대문 의왕점</text>
+        </svg>
+        <div style="margin-top:12px; text-align:center;">
+          <a href="https://naver.me/5EUX5aej" target="_blank" style="display:inline-block; background:#8FCDEB; color:#FFFFFF; text-decoration:none; font-family:'Jua'; font-size:17px; padding:12px 26px; border-radius:999px;">네이버 지도에서 보기</a>
+        </div>
+      </div>
+
+      <img src="photos/stk_hearthands.png" alt="손하트 하는 태오" style="margin-top:22px; width:220px; transform:rotate(-2deg);">
+
+      <div style="margin-top:24px; font-size:17px; color:#8A7462;">아빠 · 엄마 올림</div>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:600,&quot;height&quot;:1320},&quot;babyName&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;우리 아기&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;내용&quot;},&quot;heroPhoto&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;default&quot;:&quot;hehe&quot;,&quot;options&quot;:[&quot;hehe&quot;,&quot;annyeong&quot;,&quot;jjok&quot;,&quot;wa&quot;,&quot;choego&quot;,&quot;wave&quot;,&quot;nyam&quot;],&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;사진&quot;}}">
+class Component extends DCLogic {
+  renderVals() {
+    return {
+      babyName: this.props.babyName ?? '우리 아기',
+      heroPhoto: this.props.heroPhoto ?? 'hehe',
+      heroImg: React.createElement('img', { src: 'photos/stk_bluejays.png', alt: '생일잔치에 초대합니다', style: { marginTop: 20, width: 340 } }),
+    };
+  }
+}
+</script>
+</body>
+</html>

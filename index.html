@@ -5,18 +5,18 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>태오의 첫 번째 생일 — 돌잔치 초대장</title>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
-<link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Jua&family=Gaegu:wght@700&display=swap" rel="stylesheet">
 <style>
+  @font-face { font-family:'NanumSquareRound'; src:url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_two@1.0/NanumSquareRound.woff') format('woff'); font-weight:normal; }
   * { box-sizing: border-box; }
   body {
     margin: 0;
-    background: #E9E7E2;
-    font-family: 'Pretendard', -apple-system, sans-serif;
+    background: #EAF5FB;
+    font-family: 'NanumSquareRound', sans-serif;
     overflow-x: hidden;
   }
-  a { color: #2A2A2A; text-decoration: none; }
-  a:hover { color: #5FA8CD; }
+  a { color: #3E9CC9; text-decoration: none; }
+  a:hover { color: #2B7FA8; }
   .stage {
     min-height: 100vh;
     display: flex;
@@ -28,171 +28,142 @@
     width: fit-content;
   }
   .card {
-    width: 540px;
-    background: #F7F5F1;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
-    border: 12px solid #8FCDEB;
-    border-radius: 32px;
+    width: 520px;
+    background: #FCF3E7;
+    border: 6px solid #8FCDEB;
+    border-radius: 28px;
     padding: 10px;
   }
   .frame {
     border: 2px dashed #B5DEF2;
     border-radius: 20px;
-    padding: 60px 30px 54px;
+    padding: 40px 36px 36px;
     display: flex;
     flex-direction: column;
     align-items: center;
-    position: relative;
-    overflow: hidden;
+    color: #5B4636;
   }
-  .pattern {
-    position: absolute;
-    inset: 0;
-    z-index: 0;
+  .crayon-headline {
+    font-family: 'Gaegu', cursive;
+    font-weight: 700;
+    font-size: 40px;
+    line-height: 1;
+    letter-spacing: 3px;
+    transform: rotate(-2deg);
+    text-shadow: 1px 1px 0 rgba(111,188,224,0.35);
+  }
+  .crayon-headline .first { color: #6FBCE0; }
+  .crayon-headline .birthday { color: #F49A9A; }
+  .crayon-sub {
+    margin-top: 8px;
+    font-family: 'Gaegu', cursive;
+    font-weight: 700;
+    font-size: 24px;
+    color: #8A7462;
+    transform: rotate(-1deg);
+  }
+  .hero-photo {
+    margin-top: 20px;
+    width: 340px;
+    max-width: 100%;
+  }
+  .title {
+    font-family: 'Jua', sans-serif;
+    font-weight: normal;
+    font-size: 44px;
+    margin: 26px 0 0;
+    color: #4E9FC7;
+    text-align: center;
+    line-height: 1.35;
+  }
+  .greeting {
+    margin: 14px 0 0;
+    font-size: 18px;
+    line-height: 1.8;
+    text-align: center;
+    color: #7A6552;
+  }
+  .info-card {
+    margin-top: 28px;
+    width: 100%;
+    background: #fff;
+    border-radius: 18px;
+    padding: 22px 24px;
     display: flex;
     flex-direction: column;
-    gap: 26px;
-    padding-top: 18px;
-    pointer-events: none;
+    gap: 12px;
   }
-  .pattern-row {
-    white-space: nowrap;
-    font-size: 40px;
-    color: #E4F1FA;
-    letter-spacing: 4px;
+  .info-row {
+    display: flex;
+    gap: 12px;
+    align-items: baseline;
+  }
+  .info-label {
     font-family: 'Jua', sans-serif;
-  }
-  .photo-comp {
-    position: relative;
-    width: 260px;
-    height: 460px;
+    font-size: 17px;
+    color: #6FBCE0;
+    width: 52px;
     flex: none;
   }
-  .photo-oval {
-    position: absolute;
-    left: 20px;
-    top: 150px;
-    width: 220px;
-    height: 280px;
-    border-radius: 50%;
-    overflow: hidden;
+  .info-value {
+    font-size: 19px;
+    font-weight: bold;
   }
-  .photo-oval img {
-    width: 540px;
-    height: 540px;
-    margin: -165px 0 0 -142px;
+  .info-value.address {
+    font-size: 17px;
+    font-weight: normal;
+    color: #8A7462;
   }
-  .hat {
-    position: absolute;
-    left: 18px;
-    top: 24px;
-    width: 230px;
-    height: 190px;
-    background: #6FBCE0;
-    clip-path: polygon(52% 0, 0 96%, 100% 78%);
-  }
-  .balloon-string {
-    position: absolute;
-    left: 0;
-    top: 418px;
-    width: 260px;
-  }
-  .big-one {
-    font-weight: 800;
-    font-size: 128px;
-    line-height: 1;
-    color: #3D5A73;
-    letter-spacing: -4px;
-    position: relative;
-  }
-  .text-block {
-    margin-top: 24px;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    text-align: center;
-    position: relative;
-  }
-  .label {
-    font-size: 22px;
-    font-weight: 600;
-    color: #5C5A55;
-  }
-  .headline {
-    font-size: 42px;
-    font-weight: 800;
-    letter-spacing: -1px;
-    line-height: 1.25;
-  }
-  .headline .navy { color: #3D5A73; }
-  .headline .sky { color: #7FA8C9; }
-  .details {
-    font-size: 24px;
-    font-weight: 700;
-    color: #2A2A2A;
-    margin-top: 8px;
-  }
-  .address {
-    font-size: 18px;
-    font-weight: 500;
-    margin-top: 4px;
-  }
-  .address a { color: #8B8880; cursor: pointer; }
-  .address a:hover { color: #5FA8CD; }
-
-  /* Inline map panel (expands below the address link) */
-  .map-panel {
+  .map-card {
+    margin-top: 16px;
     width: 100%;
-    max-height: 0;
-    overflow: hidden;
-    opacity: 0;
-    transition: max-height 0.3s ease, opacity 0.25s ease, margin-top 0.3s ease;
+    background: #fff;
+    border-radius: 18px;
+    padding: 18px 20px 16px;
   }
-  .map-panel.open {
-    max-height: 360px;
-    opacity: 1;
-    margin-top: 14px;
+  .map-card-title {
+    font-family: 'Jua', sans-serif;
+    font-size: 18px;
+    color: #6FBCE0;
+    margin-bottom: 10px;
   }
   .map-panel-inner {
-    border: 1px solid #E4E1DA;
+    border: 1px solid #EFE6D8;
     border-radius: 14px;
     overflow: hidden;
     background: #fff;
     text-align: left;
   }
   .map-panel-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
     padding: 10px 14px;
-    background: #F0EEE9;
+    background: #F5EFE3;
   }
   .map-panel-title {
+    font-family: 'Jua', sans-serif;
     font-size: 14px;
-    font-weight: 700;
-    color: #2A2A2A;
+    color: #5B4636;
   }
-  .map-panel-close {
-    border: none;
-    background: none;
-    font-size: 18px;
-    line-height: 1;
-    color: #8B8880;
-    cursor: pointer;
-    padding: 2px 4px;
-  }
-  .map-panel-close:hover { color: #5FA8CD; }
   #naverMap {
     width: 100%;
     height: 260px;
-    background: #E9E7E2;
+    background: #EAF5FB;
   }
   .map-panel-footer {
     padding: 10px 14px 12px;
     font-size: 13px;
-    color: #5C5A55;
+    color: #7A6552;
   }
-  .map-panel-footer a { color: #8B8880; }
+  .closing-photo {
+    margin-top: 22px;
+    width: 220px;
+    max-width: 100%;
+    transform: rotate(-2deg);
+  }
+  .sign-off {
+    margin-top: 24px;
+    font-size: 17px;
+    color: #8A7462;
+  }
 </style>
 </head>
 <body>
@@ -200,53 +171,50 @@
   <div class="card-outer" id="cardOuter">
     <div class="card">
       <div class="frame">
-        <div class="pattern" id="pattern"></div>
-        <div class="photo-comp">
-          <div class="photo-oval">
-            <img src="photos/hehe.png" alt="태오">
+        <div class="crayon-headline"><span class="first">FIRST</span> <span class="birthday">BIRTHDAY</span></div>
+        <div class="crayon-sub">저희 아기가 첫 생일을 맞이했어요</div>
+        <img class="hero-photo" src="photos/stk_bluejays.png" alt="생일잔치에 초대합니다">
+        <h1 class="title">태오의<br>첫 번째 생일</h1>
+        <p class="greeting">사랑으로 함께해 주신 모든 분들을 모시고<br>우리 태오의 첫 돌을 축하하려 합니다.<br>귀한 걸음 하시어 자리를 빛내 주세요.</p>
+
+        <div class="info-card">
+          <div class="info-row">
+            <span class="info-label">날짜</span>
+            <span class="info-value">2026년 9월 5일 토요일 오후 1시</span>
           </div>
-          <div class="hat"></div>
-          <svg class="balloon-string" viewBox="0 0 260 60">
-            <path d="M 78 0 Q 130 46 182 0" stroke="#2A2A2A" stroke-width="1.5" fill="none"></path>
-            <path d="M 130 34 Q 118 26 122 40 Q 130 46 130 34 Q 142 26 138 40 Q 130 46 130 34 L 130 52" stroke="#2A2A2A" stroke-width="1.5" fill="none"></path>
-          </svg>
+          <div class="info-row">
+            <span class="info-label">장소</span>
+            <span class="info-value">열두대문 의왕점</span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">주소</span>
+            <span class="info-value address">경기 의왕시 학현로 204</span>
+          </div>
         </div>
-        <div class="big-one">1</div>
-        <div class="text-block">
-          <div class="label">함께 축하해 주세요</div>
-          <div class="headline"><span class="navy">태오의</span> <span class="sky">첫 번째 생일</span><span class="navy">.</span></div>
-          <div class="details">9월 5일 토요일 오후 1시 | 열두대문 의왕점</div>
-          <div class="address"><a id="mapTrigger">경기 의왕시 학현로 204 · 지도 보기</a></div>
-          <div class="map-panel" id="mapPanel">
-            <div class="map-panel-inner">
-              <div class="map-panel-header">
-                <div class="map-panel-title">열두대문 의왕점</div>
-                <button class="map-panel-close" id="mapClose" aria-label="닫기">&times;</button>
-              </div>
-              <div id="naverMap"></div>
-              <div class="map-panel-footer">
-                경기 의왕시 학현로 204 ·
-                <a href="https://naver.me/5EUX5aej" target="_blank" rel="noopener">네이버 지도 앱에서 열기</a>
-              </div>
+
+        <div class="map-card">
+          <div class="map-card-title">오시는 길</div>
+          <div class="map-panel-inner">
+            <div class="map-panel-header">
+              <div class="map-panel-title">열두대문 의왕점</div>
+            </div>
+            <div id="naverMap"></div>
+            <div class="map-panel-footer">
+              경기 의왕시 학현로 204 ·
+              <a href="https://naver.me/5EUX5aej" target="_blank" rel="noopener">네이버 지도 앱에서 열기</a>
             </div>
           </div>
         </div>
+
+        <img class="closing-photo" src="photos/stk_hearthands.png" alt="손하트 하는 태오">
+        <div class="sign-off">아빠 · 엄마 올림</div>
       </div>
     </div>
   </div>
 </div>
 
 <script>
-  const pattern = document.getElementById('pattern');
-  for (let i = 0; i < 14; i++) {
-    const row = document.createElement('div');
-    row.className = 'pattern-row';
-    row.style.marginLeft = i % 2 ? '-160px' : '-40px';
-    row.textContent = i % 2 ? 'BIRTHDAY HAPPY BIRTHDAY HAPPY' : 'HAPPY BIRTHDAY HAPPY BIRTHDAY';
-    pattern.appendChild(row);
-  }
-
-  const CARD_WIDTH = 540;
+  const CARD_WIDTH = 520;
   const outer = document.getElementById('cardOuter');
   function fitCard() {
     const available = window.innerWidth - 32; // 16px side padding each side
@@ -267,34 +235,7 @@
     name: '열두대문 의왕점'
   };
 
-  const panel = document.getElementById('mapPanel');
-  const trigger = document.getElementById('mapTrigger');
-  const closeBtn = document.getElementById('mapClose');
-  let mapLoaded = false;
-
-  function openMap() {
-    panel.classList.add('open');
-    if (!mapLoaded) {
-      mapLoaded = true;
-      loadNaverMap();
-    }
-    setTimeout(() => {
-      panel.scrollIntoView({ block: 'end' });
-    }, 320);
-  }
-  function closeMap() {
-    panel.classList.remove('open');
-  }
-  function toggleMap() {
-    if (panel.classList.contains('open')) closeMap();
-    else openMap();
-  }
-
-  trigger.addEventListener('click', (e) => {
-    e.preventDefault();
-    toggleMap();
-  });
-  closeBtn.addEventListener('click', closeMap);
+  loadNaverMap();
 
   function loadNaverMap() {
     const script = document.createElement('script');
@@ -302,7 +243,7 @@
     script.onload = initNaverMap;
     script.onerror = () => {
       document.getElementById('naverMap').innerHTML =
-        '<div style="display:flex;align-items:center;justify-content:center;height:100%;color:#8B8880;font-size:14px;">지도를 불러오지 못했습니다</div>';
+        '<div style="display:flex;align-items:center;justify-content:center;height:100%;color:#8A7462;font-size:14px;">지도를 불러오지 못했습니다</div>';
     };
     document.head.appendChild(script);
   }
