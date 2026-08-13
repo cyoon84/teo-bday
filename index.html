@@ -161,6 +161,105 @@
     font-size: 13px;
     color: #7A6552;
   }
+  .rsvp-card {
+    margin-top: 16px;
+    width: 100%;
+    background: #fff;
+    border-radius: 18px;
+    padding: 20px;
+  }
+  .rsvp-title {
+    font-family: 'Jua', sans-serif;
+    font-size: 18px;
+    color: #6FBCE0;
+    margin-bottom: 14px;
+  }
+  .rsvp-toggle {
+    display: flex;
+    gap: 10px;
+  }
+  .rsvp-toggle-btn {
+    flex: 1;
+    padding: 14px 8px;
+    border: 2px solid #EFE6D8;
+    border-radius: 14px;
+    background: #FFFBF5;
+    font-family: 'NanumSquareRound', sans-serif;
+    font-weight: bold;
+    font-size: 15px;
+    color: #8A7462;
+    cursor: pointer;
+    text-align: center;
+  }
+  .rsvp-toggle-btn.selected[data-val="yes"] {
+    border-color: #8FCDEB;
+    background: #EAF5FB;
+    color: #3E9CC9;
+  }
+  .rsvp-toggle-btn.selected[data-val="no"] {
+    border-color: #F0B8B8;
+    background: #FDF1F1;
+    color: #C97575;
+  }
+  .rsvp-field {
+    margin-top: 14px;
+  }
+  .rsvp-label {
+    display: block;
+    font-size: 14px;
+    font-weight: bold;
+    color: #5B4636;
+    margin-bottom: 6px;
+  }
+  .rsvp-input {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #EFE6D8;
+    border-radius: 10px;
+    font-family: inherit;
+    font-size: 15px;
+    color: #5B4636;
+  }
+  .rsvp-guests {
+    display: flex;
+    gap: 10px;
+    margin-top: 14px;
+  }
+  .rsvp-guests[hidden] {
+    display: none;
+  }
+  .rsvp-guests .rsvp-field {
+    flex: 1;
+    margin-top: 0;
+  }
+  .rsvp-submit {
+    margin-top: 18px;
+    width: 100%;
+    padding: 14px;
+    border: none;
+    border-radius: 999px;
+    background: #8FCDEB;
+    color: #fff;
+    font-family: 'Jua', sans-serif;
+    font-size: 17px;
+    cursor: pointer;
+  }
+  .rsvp-submit:disabled {
+    opacity: 0.6;
+    cursor: default;
+  }
+  .rsvp-note {
+    margin-top: 10px;
+    font-size: 12px;
+    color: #B0876E;
+    text-align: center;
+  }
+  .rsvp-success {
+    text-align: center;
+    color: #3E9CC9;
+    font-size: 16px;
+    font-weight: bold;
+  }
   .closing-photo {
     margin-top: 22px;
     width: 220px;
@@ -214,6 +313,32 @@
           </div>
         </div>
 
+        <div class="rsvp-card">
+          <div class="rsvp-title">참석 여부를 알려주세요</div>
+          <form id="rsvpForm">
+            <div class="rsvp-toggle" role="group" aria-label="참석 여부">
+              <button type="button" class="rsvp-toggle-btn" data-val="yes">네, 갈게요 🎉</button>
+              <button type="button" class="rsvp-toggle-btn" data-val="no">아쉽지만 다음에 뵐게요</button>
+            </div>
+            <div class="rsvp-field">
+              <label class="rsvp-label" for="rsvpName">이름</label>
+              <input class="rsvp-input" type="text" id="rsvpName" name="name" placeholder="성함을 입력해 주세요" required>
+            </div>
+            <div class="rsvp-guests" id="rsvpGuests" hidden>
+              <div class="rsvp-field">
+                <label class="rsvp-label" for="rsvpAdults">어른</label>
+                <input class="rsvp-input" type="number" id="rsvpAdults" name="adults" min="0" value="1" inputmode="numeric">
+              </div>
+              <div class="rsvp-field">
+                <label class="rsvp-label" for="rsvpKids">아이</label>
+                <input class="rsvp-input" type="number" id="rsvpKids" name="kids" min="0" value="0" inputmode="numeric">
+              </div>
+            </div>
+            <button type="submit" class="rsvp-submit" id="rsvpSubmit">전달하기</button>
+          </form>
+          <div class="rsvp-success" id="rsvpSuccess" hidden>전달됐어요. 감사합니다! 🙏</div>
+        </div>
+
         <img class="closing-photo" src="photos/stk_hearthands.png" alt="손하트 하는 태오">
         <div class="sign-off">아빠 · 엄마 올림</div>
       </div>
@@ -264,6 +389,61 @@
     });
     new naver.maps.Marker({ position, map, title: PLACE.name });
   }
+
+  // --- RSVP form ---
+  // Google Apps Script Web App URL (deploy the Apps Script, then paste the /exec URL here).
+  const RSVP_SCRIPT_URL = 'PASTE_GOOGLE_APPS_SCRIPT_WEB_APP_URL_HERE';
+
+  const rsvpToggleBtns = document.querySelectorAll('.rsvp-toggle-btn');
+  const rsvpGuests = document.getElementById('rsvpGuests');
+  const rsvpForm = document.getElementById('rsvpForm');
+  const rsvpSubmit = document.getElementById('rsvpSubmit');
+  const rsvpSuccess = document.getElementById('rsvpSuccess');
+  let rsvpAttending = null;
+
+  rsvpToggleBtns.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      rsvpAttending = btn.dataset.val === 'yes';
+      rsvpToggleBtns.forEach((b) => b.classList.toggle('selected', b === btn));
+      rsvpGuests.hidden = !rsvpAttending;
+    });
+  });
+
+  rsvpForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    if (rsvpAttending === null) {
+      alert('참석 여부를 선택해 주세요.');
+      return;
+    }
+    const name = document.getElementById('rsvpName').value.trim();
+    if (!name) {
+      alert('이름을 입력해 주세요.');
+      return;
+    }
+    const payload = {
+      name,
+      attending: rsvpAttending,
+      adults: rsvpAttending ? Number(document.getElementById('rsvpAdults').value || 0) : 0,
+      kids: rsvpAttending ? Number(document.getElementById('rsvpKids').value || 0) : 0
+    };
+
+    rsvpSubmit.disabled = true;
+    rsvpSubmit.textContent = '전달 중...';
+
+    fetch(RSVP_SCRIPT_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify(payload)
+    }).then(() => {
+      rsvpForm.hidden = true;
+      rsvpSuccess.hidden = false;
+    }).catch(() => {
+      rsvpSubmit.disabled = false;
+      rsvpSubmit.textContent = '전달하기';
+      alert('전송에 실패했어요. 잠시 후 다시 시도해 주세요.');
+    });
+  });
 </script>
 </body>
 </html>
